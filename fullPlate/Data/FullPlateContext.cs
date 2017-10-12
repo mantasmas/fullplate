@@ -4,12 +4,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace fullPlate.Data
 {
-  public class FullPlateContext : IdentityDbContext
-  {
-    public FullPlateContext(DbContextOptions<FullPlateContext> options) : base(options)
+    public class FullPlateContext : IdentityDbContext<User>
     {
-    }
+        public FullPlateContext(DbContextOptions<FullPlateContext> options) : base(options)
+        {
+        }
 
-    public DbSet<User> Users { get; set; }
-  }
+        public DbSet<Restaurant> Restaurants { get; set; }
+    }
 }

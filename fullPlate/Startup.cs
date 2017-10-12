@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using fullPlate.Data;
 using fullPlate.Data.Models;
+using fullPlate.Services;
+using fullPlate.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -61,7 +63,9 @@ namespace fullPlate
               options.Cookie.Expiration = TimeSpan.FromDays(150);
               options.SlidingExpiration = true;
             });
-    }
+
+            services.AddTransient<IRestaurantsService, RestaurantService>();
+        }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
