@@ -6,7 +6,7 @@
           <div class="deletion-confirmation">
             <p>{{title}}</p>
             <div>
-              <button type="button" class="btn-secondary js-confirm">Delete</button>
+              <button type="button" class="btn-secondary js-confirm" @click="handleDelete">Delete</button>
               <button type="button" class="btn-link" data-modal-control="close" @click="handleCancel">Cancel</button>
             </div>
           </div>
@@ -17,23 +17,26 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex';
+
   export default {
     name: 'confirm-modal',
     props: ['title'],
     data () {
-      return {
-        title: this.title
-      }
+      return {};
     },
     methods: {
       handleDelete () {
-        console.log('delete')
+        this.$store.dispatch('removeRestaurant', this.restaurantDeleteId);
       },
       handleCancel () {
-        this.$store.commit('hideConfirm')
+        this.$store.commit('toggleConfirm');
       }
+    },
+    computed: {
+      ...mapGetters(['restaurantDeleteId'])
     }
-  }
+  };
 </script>
 
 <style>

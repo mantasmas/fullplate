@@ -20,7 +20,7 @@
 </template>
 
 <script>
-  import _ from 'lodash'
+  import _ from 'lodash';
 
   export default {
     name: 'OverviewTable',
@@ -30,16 +30,16 @@
         type: this.dishTypeObj.type,
         dishes: this.dishTypeObj.dishes,
         sortDescending: true
-      }
+      };
     },
     methods: {
       sortColumn (sortProperty) {
-        const sortOrder = this.sortDescending ? 'desc' : 'asc'
-        this.dishes = _.orderBy(this.dishes, sortProperty, sortOrder)
-        this.sortDescending = !this.sortDescending
+        const sortOrder = this.sortDescending ? 'desc' : 'asc';
+        this.dishes = _.orderBy(this.dishes, sortProperty, sortOrder);
+        this.sortDescending = !this.sortDescending;
       }
     }
-  }
+  };
 </script>
 
 <style>

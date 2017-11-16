@@ -20,15 +20,15 @@
       return {
         usrName: '',
         pass: ''
-      }
+      };
     },
     methods: {
       handleSubmit () {
-        console.log(this.usrName)
-        console.log(this.pass)
+        console.log(this.usrName);
+        console.log(this.pass);
       }
     }
-  }
+  };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

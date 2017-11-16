@@ -9,5 +9,7 @@ namespace fullPlate.Services.Interfaces
     public interface IRestaurantsService
     {
         List<RestaurantResponse>GetAll();
+        RestaurantResponse AddNewRestaurant(string restaurantName);
+        bool RemoveRestaurant(int restaurantId);
     }
 }

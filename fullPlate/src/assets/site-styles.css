@@ -1025,7 +1025,7 @@ body {
 
 .ie9 .loader:after {
   background: none;
-  color: #B51B5C;
+  color: #29abe2;
   content: 'Loading';
   line-height: 1;
   opacity: 1;
@@ -1056,12 +1056,12 @@ body {
   width: 200px;
   z-index: 3; }
   .loader:before {
-    border: 5px solid #B51B5C;
+    border: 5px solid  #29abe2;
     border-bottom-color: transparent;
     box-sizing: border-box;
-    -webkit-animation: spin 0.5s infinite linear;
-    -moz-animation: spin 0.5s infinite linear;
-    animation: spin 0.5s infinite linear;
+    -webkit-animation: spin 1s infinite linear;
+    -moz-animation: spin 1s infinite linear;
+    animation: spin 1s infinite linear;
     transform-origin: 50% 50%;
     border-radius: 50%;
     content: '';
@@ -1883,5 +1883,6 @@ a.admin {
     display: inline-block;
     margin:0;
   }
+
 
 /*# sourceMappingURL=site-styles.css.map */

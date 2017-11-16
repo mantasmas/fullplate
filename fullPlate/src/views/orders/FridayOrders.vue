@@ -18,11 +18,11 @@
 </template>
 
 <script>
-  import moment from 'moment'
+  import moment from 'moment';
 
-  import fixture from '../../fixtures/fridayOrders'
-  import OverviewTable from '../../components/orders/OverviewTable.vue'
-  import IndividualOrders from '../../components/orders/IndividualOrders.vue'
+  import fixture from '../../fixtures/fridayOrders';
+  import OverviewTable from '../../components/orders/OverviewTable.vue';
+  import IndividualOrders from '../../components/orders/IndividualOrders.vue';
 
   export default {
     name: 'FridayOrders',
@@ -31,7 +31,7 @@
         overviewDate: moment(new Date(fixture.overviewDate)).format('MMMM DD'),
         overviewInfo: fixture.overviewInfo,
         individualOrders: fixture.individualOrders
-      }
+      };
     },
     methods: {
 
@@ -41,7 +41,7 @@
       'overview-table': OverviewTable,
       'individual-orders': IndividualOrders
     }
-  }
+  };
 </script>
 
 <style>
