@@ -26,14 +26,14 @@
         restaurantName: 'Talluti',
         restaurantOffers: [],
         editRestaurantName: false
-      }
+      };
     },
     methods: {
       toggleNameEdit () {
-        this.editRestaurantName = !this.editRestaurantName
+        this.editRestaurantName = !this.editRestaurantName;
       }
     }
-  }
+  };
 </script>
 
 <style>

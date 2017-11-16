@@ -9,14 +9,14 @@
       return {
         usrName: '',
         pass: ''
-      }
+      };
     },
     methods: {
       handleSubmit () {
-        console.log(this.usrName)
+        console.log(this.usrName);
       }
     }
-  }
+  };
 </script>
 
 <style>

@@ -1,24 +1,21 @@
 <template>
   <div>
-    <restaurants-table :restaurantsList="restaurants"></restaurants-table>
-    <confirm-modal v-if="isConfirmVisible"
-                   :title="'Do you want to remove this category?'"></confirm-modal>
+    <restaurants-table></restaurants-table>
+    <confirm-modal v-if="isModalVisible"
+                   :title="'Do you want to remove this restaurant?'"></confirm-modal>
   </div>
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapGetters } from 'vuex';
 
-  import RestaurantsTable from '../../components/restaurants/RestautantsTable'
-  import ConfirmModal from '../../components/ConfirmModal'
-  import restaurantsFixture from '../../fixtures/restaurants'
+  import RestaurantsTable from './RestautantsTable';
+  import ConfirmModal from '../../components/ConfirmModal';
 
   export default {
     name: 'Restaurants',
     data () {
-      return {
-        restaurants: restaurantsFixture
-      }
+      return {};
     },
     components: {
       RestaurantsTable,
@@ -26,7 +23,7 @@
       'confirm-modal': ConfirmModal
     },
     computed: {
-      ...mapGetters(['isConfirmVisible'])
+      ...mapGetters(['isModalVisible'])
     }
-  }
+  };
 </script>

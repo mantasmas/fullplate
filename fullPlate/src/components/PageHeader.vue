@@ -16,9 +16,9 @@
     data () {
       return {
         name: 'John'
-      }
+      };
     }
-  }
+  };
 </script>
 
 <style>

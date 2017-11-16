@@ -1,15 +1,15 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from 'vue';
+import Router from 'vue-router';
 
-import Login from '@/views/Login'
-import Page from '@/views/Page'
-import FridayOrders from '@/views/orders/FridayOrders'
-import NotFound from '@/views/NotFound'
-import Restaurants from '@/views/restaurants/Restaurants.vue'
-import Index from '@/views/Index'
-import RestaurantDetails from '@/views/restaurants/RestaurantDetails'
+import Login from '@/views/Login';
+import Page from '@/views/Page';
+import FridayOrders from '@/views/orders/FridayOrders';
+import NotFound from '@/views/NotFound';
+import Restaurants from '@/views/restaurants/Restaurants.vue';
+import Index from '@/views/Index';
+import RestaurantDetails from '@/views/restaurants/RestaurantDetails';
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   routes: [
@@ -60,4 +60,4 @@ export default new Router({
       ]
     }
   ]
-})
+});
