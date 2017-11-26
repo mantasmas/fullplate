@@ -12,9 +12,10 @@ using System;
 namespace fullPlate.Migrations
 {
     [DbContext(typeof(FullPlateContext))]
-    partial class FullPlateContextModelSnapshot : ModelSnapshot
+    [Migration("20171125142251_add_relation_dishes")]
+    partial class add_relation_dishes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -232,10 +233,9 @@ namespace fullPlate.Migrations
 
             modelBuilder.Entity("fullPlate.Data.Models.Dish", b =>
                 {
-                    b.HasOne("fullPlate.Data.Models.Restaurant", "Restaurant")
+                    b.HasOne("fullPlate.Data.Models.Restaurant")
                         .WithMany("Dishes")
-                        .HasForeignKey("RestaurantId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("RestaurantId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

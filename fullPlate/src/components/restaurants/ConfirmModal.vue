@@ -1,40 +1,37 @@
 <template>
-  <transition name="modal">
-    <div class="modal-mask">
-      <div class="modal-wrapper">
-        <div class="modal-container">
-          <div class="deletion-confirmation">
-            <p>{{title}}</p>
-            <div>
-              <button type="button" class="btn-secondary js-confirm" @click="handleDelete">Delete</button>
-              <button type="button" class="btn-link" data-modal-control="close" @click="handleCancel">Cancel</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </transition>
+  <md-dialog-confirm
+      :md-title="confirm.title"
+      :md-content-html="confirm.contentHtml"
+      :md-ok-text="confirm.ok"
+      :md-cancel-text="confirm.cancel"
+      @close="onClose"
+      ref="confirm-restaurant-delete">
+  </md-dialog-confirm>
 </template>
 
 <script>
-  import { mapGetters } from 'vuex';
-
   export default {
-    name: 'confirm-modal',
-    props: ['title'],
+    name: 'confirm-restaurant-delete',
+    props: ['restaurantId'],
     data () {
-      return {};
+      return {
+        confirm: {
+          title: 'Delete this restaurant?',
+          contentHtml: 'Are you sure you want to delete this restaurant?',
+          ok: 'Agree',
+          cancel: 'Disagree'
+        }
+      };
     },
     methods: {
-      handleDelete () {
-        this.$store.dispatch('removeRestaurant', this.restaurantDeleteId);
+      closeDialog (ref) {
+        this.$refs[ref].close();
       },
-      handleCancel () {
-        this.$store.commit('toggleConfirm');
+      onClose (type) {
+        if (type === 'ok') {
+          this.$store.dispatch('removeRestaurant', this.restaurantId);
+        }
       }
-    },
-    computed: {
-      ...mapGetters(['restaurantDeleteId'])
     }
   };
 </script>

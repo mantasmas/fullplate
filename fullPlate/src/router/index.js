@@ -43,8 +43,8 @@ export default new Router({
           component: Restaurants
         },
         {
-          path: 'restaurantes',
-          name: 'Restaurants',
+          path: 'restaurants/:id',
+          name: 'Restaurant',
           component: RestaurantDetails
         }
       ]

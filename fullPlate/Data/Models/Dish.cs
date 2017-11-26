@@ -23,5 +23,7 @@ namespace fullPlate.Data.Models
 
         [Required]
         public bool IsVegetarian { get; set; }
+
+        public Restaurant Restaurant { get; set; }
     }
 }

@@ -1,80 +1,100 @@
 <template>
-  <div v-if="restaurantsLoaded">
-    <div v-if="restaurantsList.length">
-      <table class="table-primary menu-items-table">
-        <thead>
-        <tr class="table-headings">
-          <th><i class="icon-filter-arrow-table"></i>Name</th>
-          <th style="width: 125px;"></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="restaurant in restaurantsList">
-          <td>{{restaurant.name}}</td>
-          <td>
-            <router-link :to="'/restaurants/' + restaurant.id">
-              <button type="button" class="btn-primary">
-                <i class="icon-pencil"></i>
-              </button>
-            </router-link>
-            <button type="button" class="btn-secondary js-confirm-deletion" @click="handleDelete(restaurant.id)">
-              <i class="icon-minus"></i>
-            </button>
-          </td>
-        </tr>
-        <tr v-if="showAdd">
-          <td>
-            <form id="new-restaurant" v-on:submit.prevent="handleAdd(newRestaurantName)">
-              <input type="text" class="restaurant-input" name="guest-name" required="" v-model="newRestaurantName"/>
-            </form>
-          </td>
-          <td>
-            <button class="btn-primary" type="submit" form="new-restaurant">
-              <i class="icon-plus"/>
-            </button>
-            <button class="btn-secondary" type="button" @click="toggleAdd()">
-              <i class="icon-minus"/>
-            </button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
-    <div v-else-if="restaurantsList.length === 0">
-      <h2>No restaurants registered!</h2>
-    </div>
-    <button class="btn-primary add-restaurant" v-if="!showAdd" @click="toggleAdd()"><i class="icon-plus"></i>Add Restaurant</button>
-  </div>
+  <div>
+    <md-table-card style="width: 100%;" v-if="restaurantsLoaded">
+      <md-toolbar>
+        <h1 class="md-title">Restaurants</h1>
+        <md-button>Add</md-button>
+      </md-toolbar>
 
+      <md-table md-sort="name">
+        <md-table-header>
+          <md-table-row>
+            <md-table-head md-sort-by="name">Restaurant name</md-table-head>
+            <md-table-head md-sort-by="address">Restaurant Address</md-table-head>
+            <md-table-head md-sort-by="number">Restaurant Telephone No.</md-table-head>
+            <md-table-head md-sort-by="count">Dishes Count</md-table-head>
+            <md-table-head>Actions</md-table-head>
+          </md-table-row>
+        </md-table-header>
+
+        <md-table-body>
+          <md-table-row v-for="(restaurant, idx) in restaurantsList" :key="idx" :md-item="restaurant">
+            <md-table-cell>
+              {{restaurant.name}}
+            </md-table-cell>
+            <md-table-cell>
+              {{restaurant.address || '---'}}
+            </md-table-cell>
+            <md-table-cell>
+              {{restaurant.number || '---'}}
+            </md-table-cell>
+            <md-table-cell>
+              {{restaurant.dishes ? restaurant.dishes.length : '---'}}
+            </md-table-cell>
+            <md-table-cell>
+              <md-menu md-size="3">
+                <md-button class="md-icon-button" md-menu-trigger>
+                  <md-icon>more_vert</md-icon>
+                </md-button>
+
+                <md-menu-content>
+                  <md-menu-item>
+                    <md-icon>edit</md-icon>
+                    <span>Edit info</span>
+                  </md-menu-item>
+
+                  <md-menu-item @selected="handleDelete(restaurant.id)">
+                    <md-icon>remove</md-icon>
+                    <span>Remove</span>
+                  </md-menu-item>
+                </md-menu-content>
+              </md-menu>
+            </md-table-cell>
+          </md-table-row>
+        </md-table-body>
+      </md-table>
+    </md-table-card>
+
+    <md-dialog-confirm
+        :md-title="confirm.title"
+        :md-content-html="confirm.contentHtml"
+        :md-ok-text="confirm.ok"
+        :md-cancel-text="confirm.cancel"
+        @close="onClose"
+        ref="confirm-restaurant-delete">
+    </md-dialog-confirm>
+  </div>
 </template>
 
 <script>
-  import { mapGetters } from 'vuex';
+  import {mapGetters} from 'vuex';
 
   export default {
     name: 'restaurants-table',
     data () {
       return {
-        showAdd: false,
-        newRestaurantName: ''
+        removedRestaurantId: 0,
+        confirm: {
+          title: 'Delete this restaurant?',
+          contentHtml: 'Are you sure you want to delete this restaurant?',
+          ok: 'Yes',
+          cancel: 'No'
+        }
       };
     },
     methods: {
       handleDelete (restaurantId) {
-        this.$store.commit('toggleConfirm', restaurantId);
+        this.removedRestaurantId = restaurantId;
+        this.$refs['confirm-restaurant-delete'].open();
       },
-      handleAdd (restaurantName) {
-        this.$store.dispatch('addNewRestaurant', restaurantName)
-          .then((success) => {
-            if (success) {
-              this.showAdd = false;
-              this.newRestaurantName = '';
-            }
-          });
+      closeDialog (ref) {
+        this.$refs[ref].close();
       },
-      toggleAdd () {
-        this.showAdd = !this.showAdd;
-        this.newRestaurantName = '';
+      onClose (type) {
+        console.log(type);
+        if (type === 'ok') {
+          this.$store.dispatch('removeRestaurant', this.removedRestaurantId);
+        }
       }
     },
     created () {
@@ -85,3 +105,10 @@
     }
   };
 </script>
+
+
+<style>
+  .table-actions {
+    width: 125px;
+  }
+</style>

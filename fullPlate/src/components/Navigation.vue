@@ -1,18 +1,35 @@
 <template>
-  <div class="page-sub-header">
-    <div class="page-frame">
-      <nav class="site-navigation extended">
-        <router-link to="/late-requests" class="nav-item">Late Requests</router-link>
-        <router-link to="/friday-orders" class="nav-item">Friday orders</router-link>
-        <router-link to="/totals" class="nav-item">Totals</router-link>
-        <router-link to="/restaurants" class="nav-item">Restaurants</router-link>
-      </nav>
-    </div>
-  </div>
+  <md-tabs md-centered @change="handleTabChange">
+    <md-tab v-for="(route, idx) in routes" :key="idx" :md-label="route.title" :md-active="isCurrentPath(route.link)"></md-tab>
+  </md-tabs>
 </template>
 
 <script>
   export default {
-    name: 'Navigation'
+    name: 'Navigation',
+    data () {
+      return {
+        pageLoaded: false,
+        routes: [
+          {title: 'Late Requests', link: '/late-requests'},
+          {title: 'Friday Orders', link: '/friday-orders'},
+          {title: 'Totals', link: '/totals'},
+          {title: 'Restaurants', link: '/restaurants'}
+        ]
+      };
+    },
+    methods: {
+      handleTabChange (tabIndex) {
+        if (this.pageLoaded) {
+          this.$router.push(this.routes[tabIndex].link);
+        }
+      },
+      isCurrentPath (pathName) {
+        return this.$route.path === pathName;
+      }
+    },
+    mounted () {
+      this.pageLoaded = true;
+    }
   };
 </script>

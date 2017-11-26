@@ -3,32 +3,37 @@ import _ from 'lodash';
 import api from '../../utils/apiHelper';
 
 const state = {
-  restaurants: {
-    loaded: false,
-    showDeleteModal: false,
-    newRestaurant: {
-      title: ''
-    },
-    restaurantsList: [],
-    removableRestaurantId: null
-  }
+  restaurantsLoaded: false,
+  showDeleteRestaurantModal: false,
+  newRestaurant: {
+    title: ''
+  },
+  restaurantsList: [],
+  removableRestaurantId: null,
+  editedRestaurant: {}
 };
 
 const mutations = {
   toggleConfirm (state, restaurantId) {
-    state.restaurants.showDeleteModal = !state.restaurants.showDeleteModal;
-    state.restaurants.removableRestaurantId = restaurantId;
+    state.showDeleteRestaurantModal = !state.showDeleteRestaurantModal;
+    state.removableRestaurantId = restaurantId;
   },
   updateRestaurantsList (state, newRestaurantList) {
-    state.restaurants.restaurantsList = newRestaurantList;
-    state.restaurants.loaded = true;
+    state.restaurantsList = newRestaurantList;
+    state.restaurantsLoaded = true;
   },
   addNewRestaurant (state, newRestaurant) {
-    state.restaurants.restaurantsList = [...state.restaurants.restaurantsList, newRestaurant];
+    state.restaurantsList = [...state.restaurantsList, newRestaurant];
   },
   removeRestaurant (state, removedRestaurantId) {
-    state.restaurants.restaurantsList = _.filter(state.restaurants.restaurantsList,
+    state.restaurantsList = _.filter(state.restaurantsList,
       (restaurant) => restaurant.id !== removedRestaurantId);
+  },
+  getOneRestaurant (state, restaurantData) {
+    state.editedRestaurant = restaurantData;
+  },
+  addNewDish (state, dishData) {
+    state.editedRestaurant.dishes = state.editedRestaurant.dishes.concat(dishData);
   }
 };
 
@@ -88,14 +93,72 @@ const actions = {
           return true;
         }
       });
+  },
+  getOneRestaurant ({commit}, restaurantId) {
+    commit('toggleSpinner');
+    return api
+      .get(`/api/restaurants/${restaurantId}`)
+      .then((response) => {
+        commit('toggleSpinner');
+
+        if (!response.ok) {
+          console.log('blueh when getting');
+
+          return false;
+        } else {
+          commit('toggleConfirm');
+          commit('getOneRestaurant', response.data);
+
+          return true;
+        }
+      });
+  },
+  saveRestaurantChanges ({commit}, restaurantId) {
+    commit('toggleSpinner');
+    return api
+      .get(`/api/restaurants/${restaurantId}`)
+      .then((response) => {
+        commit('toggleSpinner');
+
+        if (!response.ok) {
+          console.log('blueh when getting');
+
+          return false;
+        } else {
+          commit('toggleConfirm');
+          commit('getOneRestaurant', response.data);
+
+          return true;
+        }
+      });
+  },
+  addNewDish ({commit}, {restaurantId, dishData}) {
+    commit('toggleSpinner');
+    return api
+      .post(`/api/restaurants/${restaurantId}/dishes`, dishData)
+      .then((response) => {
+        commit('toggleSpinner');
+
+        if (!response.ok) {
+          console.log('blueh when adding new dish');
+
+          return false;
+        } else {
+          commit('toggleConfirm');
+          commit('addNewDish', response.data);
+
+          return true;
+        }
+      });
   }
 };
 
 const getters = {
-  isModalVisible: state => state.restaurants.showDeleteModal,
-  restaurantsList: state => state.restaurants.restaurantsList,
-  restaurantsLoaded: state => state.restaurants.loaded,
-  restaurantDeleteId: state => state.restaurants.removableRestaurantId
+  isModalVisible: state => state.showDeleteRestaurantModal,
+  restaurantsList: state => state.restaurantsList,
+  restaurantsLoaded: state => state.restaurantsLoaded,
+  restaurantDeleteId: state => state.removableRestaurantId,
+  editedRestaurant: state => state.editedRestaurant
 };
 
 export default {

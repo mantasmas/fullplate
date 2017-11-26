@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using fullPlate.Data;
 using fullPlate.Data.Models;
+using fullPlate.DataContracts.Requests;
 using fullPlate.DataContracts.Responses;
 using fullPlate.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
@@ -27,12 +28,35 @@ namespace fullPlate.Services
                 .Select(x => new RestaurantResponse
                     {
                         Id = x.Id,
-                        Name = x.Name,
-                        Address = x.Address,
-                        Number = x.TelephoneNumber
+                        Name = x.Name
                     }
                 )
                 .ToList();
+        }
+
+        public RestaurantResponse GetOneRestaurant(int restaurantId)
+        {
+            return _dbContext
+                .Restaurants
+                .Where(x => x.Id.Equals(restaurantId))
+                .Select(x => new RestaurantResponse
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        Address = x.Address,
+                        Number = x.TelephoneNumber,
+                        Dishes = x.Dishes.Select(y => new DishResponse
+                        {
+                            Id = y.Id,
+                            Name = y.Name,
+                            Type = y.DishType,
+                            Price = y.Price,
+                            IsVegetarian = y.IsVegetarian
+                        })
+                        .ToList()
+                    }
+                )
+                .Single();
         }
 
         public RestaurantResponse AddNewRestaurant(string restaurantName)
@@ -61,6 +85,37 @@ namespace fullPlate.Services
             _dbContext.SaveChanges();
 
             return true;
+        }
+
+        public DishResponse AddNewDish(int restaurantId, NewDishRequest dishData)
+        {
+            Dish newDish = new Dish
+            {
+                Name = dishData.name,
+                Price = dishData.price,
+                DishType = dishData.dishType,
+                IsVegetarian = dishData.isVegetarian
+            };
+
+            Restaurant restaurant = _dbContext.Restaurants
+                .Include(x => x.Dishes)
+                .Single(x => x.Id.Equals(restaurantId));
+
+            Console.WriteLine(restaurant.Id);
+            Console.WriteLine(restaurant.Name);
+
+            restaurant.Dishes.Add(newDish);
+
+            _dbContext.SaveChanges();
+
+            return new DishResponse
+            {
+                Id = newDish.Id,
+                Name = newDish.Name,
+                Price = newDish.Price,
+                Type = newDish.DishType,
+                IsVegetarian = newDish.IsVegetarian
+            };
         }
     }
 }

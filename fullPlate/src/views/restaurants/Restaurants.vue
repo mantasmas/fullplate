@@ -1,8 +1,6 @@
 <template>
   <div>
     <restaurants-table></restaurants-table>
-    <confirm-modal v-if="isModalVisible"
-                   :title="'Do you want to remove this restaurant?'"></confirm-modal>
   </div>
 </template>
 
@@ -10,7 +8,6 @@
   import { mapGetters } from 'vuex';
 
   import RestaurantsTable from './RestautantsTable';
-  import ConfirmModal from '../../components/ConfirmModal';
 
   export default {
     name: 'Restaurants',
@@ -18,9 +15,7 @@
       return {};
     },
     components: {
-      RestaurantsTable,
-      'restaurants-table': RestaurantsTable,
-      'confirm-modal': ConfirmModal
+      'restaurants-table': RestaurantsTable
     },
     computed: {
       ...mapGetters(['isModalVisible'])
