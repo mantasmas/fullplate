@@ -43,6 +43,9 @@ const mutations = {
   },
   addNewDish (state, dishData) {
     state.editedRestaurant.dishes = state.editedRestaurant.dishes.concat(dishData);
+  },
+  sortRestaurantsTable (state, sortObj) {
+    state.restaurantsList = _.orderBy(state.restaurantsList, sortObj.name, sortObj.type);
   }
 };
 

@@ -41,6 +41,7 @@ namespace fullPlate.Services
             return _dbContext
                 .Restaurants
                 .Where(x => x.Id.Equals(restaurantId))
+                .OrderBy(x => x.Name)
                 .Select(x => new RestaurantResponse
                     {
                         id = x.Id,

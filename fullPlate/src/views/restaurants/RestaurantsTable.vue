@@ -6,13 +6,13 @@
         <md-button id="btn-new-restaurant" @click="onNewRestaurantModalOpen('new-restaurant-modal')">Add</md-button>
       </md-toolbar>
 
-      <md-table md-sort="name">
+      <md-table @sort="onSort">
         <md-table-header>
           <md-table-row>
             <md-table-head md-sort-by="name">Restaurant name</md-table-head>
-            <md-table-head md-sort-by="address">Restaurant Address</md-table-head>
-            <md-table-head md-sort-by="number">Restaurant Telephone No.</md-table-head>
-            <md-table-head md-sort-by="count">Dishes Count</md-table-head>
+            <md-table-head>Restaurant Address</md-table-head>
+            <md-table-head>Restaurant Telephone No.</md-table-head>
+            <md-table-head>Dishes Count</md-table-head>
             <md-table-head>Actions</md-table-head>
           </md-table-row>
         </md-table-header>
@@ -122,6 +122,9 @@
         this.editRestaurant = true;
         this.$store.commit('setEditedRestaurant', JSON.parse(JSON.stringify(editableRestaurantData)));
         this.$refs[ref].$refs['new-restaurant-dialog'].open();
+      },
+      onSort (sortObj) {
+        this.$store.commit('sortRestaurantsTable', sortObj);
       }
     },
     created () {
