@@ -27,8 +27,10 @@ namespace fullPlate.Services
                 .Restaurants
                 .Select(x => new RestaurantResponse
                     {
-                        Id = x.Id,
-                        Name = x.Name
+                        id = x.Id,
+                        name = x.Name,
+                        address = x.Address,
+                        telephoneNumber = x.TelephoneNumber
                     }
                 )
                 .ToList();
@@ -41,11 +43,11 @@ namespace fullPlate.Services
                 .Where(x => x.Id.Equals(restaurantId))
                 .Select(x => new RestaurantResponse
                     {
-                        Id = x.Id,
-                        Name = x.Name,
-                        Address = x.Address,
-                        Number = x.TelephoneNumber,
-                        Dishes = x.Dishes.Select(y => new DishResponse
+                        id = x.Id,
+                        name = x.Name,
+                        address = x.Address,
+                        telephoneNumber = x.TelephoneNumber,
+                        dishes = x.Dishes.Select(y => new DishResponse
                         {
                             Id = y.Id,
                             Name = y.Name,
@@ -59,14 +61,16 @@ namespace fullPlate.Services
                 .Single();
         }
 
-        public RestaurantResponse AddNewRestaurant(string restaurantName)
+        public RestaurantResponse AddNewRestaurant(RestaurantDataRequest restaurantData)
         {
             Restaurant restaurant = new Restaurant
             {
-                Name = restaurantName
+                Name = restaurantData.name,
+                Address = restaurantData.address,
+                TelephoneNumber = restaurantData.telephoneNumber
             };
             
-            if (_dbContext.Restaurants.Any(x => x.Name.Equals(restaurantName)))
+            if (_dbContext.Restaurants.Any(x => x.Name.Equals(restaurantData.name)))
             {
                 throw new ArgumentException();
             }
@@ -74,7 +78,36 @@ namespace fullPlate.Services
             _dbContext.Restaurants.Add(restaurant);
             _dbContext.SaveChanges();
 
-            return new RestaurantResponse {Id = restaurant.Id, Name = restaurant.Name};
+            return new RestaurantResponse
+            {
+                id = restaurant.Id,
+                name = restaurant.Name,
+                address = restaurant.Address,
+                telephoneNumber = restaurant.TelephoneNumber
+            };
+        }
+
+        public RestaurantResponse UpdateRestaurant(int id, RestaurantDataRequest restaurantData)
+        {
+            Restaurant restaurant = new Restaurant
+            {
+                Id = id,
+                Name = restaurantData.name,
+                Address = restaurantData.address,
+                TelephoneNumber = restaurantData.telephoneNumber
+            };
+
+            _dbContext.Restaurants.Update(restaurant);
+
+            _dbContext.SaveChanges();
+
+            return new RestaurantResponse
+            {
+                id = restaurant.Id,
+                name = restaurant.Name,
+                address = restaurant.Address,
+                telephoneNumber = restaurant.TelephoneNumber
+            };
         }
 
         public bool RemoveRestaurant(int restaurantId)

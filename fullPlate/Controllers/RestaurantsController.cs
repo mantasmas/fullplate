@@ -47,16 +47,32 @@ namespace fullPlate.Controllers
         }
 
         [HttpPost]
-        public IActionResult SaveNewRestaurant([FromBody]NewRestaurantRequest request)
+        public IActionResult SaveNewRestaurant([FromBody]RestaurantDataRequest request)
         {
             RestaurantResponse response;
             try
             {
-                response = _restaurantsService.AddNewRestaurant(request.Title);
+                response = _restaurantsService.AddNewRestaurant(request);
             }
             catch (ArgumentException ex)
             {
                 return BadRequest(new ErrorResponse {ErrorMessage = "Restaurant with same name already exists!"});
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ErrorResponse { ErrorMessage = "Problems encountered when saving a restaurant!" });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateRestaurant(int id, [FromBody]RestaurantDataRequest request)
+        {
+            RestaurantResponse response;
+            try
+            {
+                response = _restaurantsService.UpdateRestaurant(id, request);
             }
             catch (Exception ex)
             {

@@ -5,7 +5,7 @@ import Login from '@/views/Login';
 import Page from '@/views/Page';
 import FridayOrders from '@/views/orders/FridayOrders';
 import NotFound from '@/views/NotFound';
-import Restaurants from '@/views/restaurants/Restaurants.vue';
+import RestaurantsTable from '@/views/restaurants/RestaurantsTable';
 import Index from '@/views/Index';
 import RestaurantDetails from '@/views/restaurants/RestaurantDetails';
 
@@ -40,7 +40,7 @@ export default new Router({
         {
           path: 'restaurants',
           name: 'Restaurants',
-          component: Restaurants
+          component: RestaurantsTable
         },
         {
           path: 'restaurants/:id',

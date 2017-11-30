@@ -22,15 +22,24 @@ const mutations = {
     state.restaurantsList = newRestaurantList;
     state.restaurantsLoaded = true;
   },
+  setEditedRestaurant (state, restaurantData) {
+    state.editedRestaurant = restaurantData;
+  },
   addNewRestaurant (state, newRestaurant) {
     state.restaurantsList = [...state.restaurantsList, newRestaurant];
+  },
+  updateRestaurant (state, restaurantData) {
+    const newList = [...state.restaurantsList];
+    console.log('newList', newList);
+    const index = newList.findIndex(restaurant => restaurant.id === restaurantData.id);
+    newList[index] = restaurantData;
+
+    state.restaurantsList = newList;
+    console.log(state.restaurantsList);
   },
   removeRestaurant (state, removedRestaurantId) {
     state.restaurantsList = _.filter(state.restaurantsList,
       (restaurant) => restaurant.id !== removedRestaurantId);
-  },
-  getOneRestaurant (state, restaurantData) {
-    state.editedRestaurant = restaurantData;
   },
   addNewDish (state, dishData) {
     state.editedRestaurant.dishes = state.editedRestaurant.dishes.concat(dishData);
@@ -57,10 +66,11 @@ const actions = {
         }
       });
   },
-  addNewRestaurant ({commit}, restaurantName) {
+  addNewRestaurant ({commit}, restaurantData) {
+    console.log(restaurantData);
     commit('toggleSpinner');
     return api
-      .post('/api/restaurants', {Title: restaurantName})
+      .post('/api/restaurants', restaurantData)
       .then((response) => {
         commit('toggleSpinner');
 
@@ -69,7 +79,26 @@ const actions = {
 
           return false;
         } else {
+          console.log(response.data);
           commit('addNewRestaurant', response.data);
+
+          return true;
+        }
+      });
+  },
+  updateRestaurant ({commit}, restaurantData) {
+    commit('toggleSpinner');
+    return api
+      .put(`/api/restaurants/${restaurantData.id}`, restaurantData)
+      .then((response) => {
+        commit('toggleSpinner');
+
+        if (!response.ok) {
+          console.log('blueh when updating');
+
+          return false;
+        } else {
+          commit('updateRestaurant', response.data);
 
           return true;
         }
@@ -155,10 +184,10 @@ const actions = {
 
 const getters = {
   isModalVisible: state => state.showDeleteRestaurantModal,
-  restaurantsList: state => state.restaurantsList,
+  restaurantsList: state => JSON.parse(JSON.stringify(state.restaurantsList)),
   restaurantsLoaded: state => state.restaurantsLoaded,
   restaurantDeleteId: state => state.removableRestaurantId,
-  editedRestaurant: state => state.editedRestaurant
+  editedRestaurant: state => JSON.parse(JSON.stringify(state.editedRestaurant))
 };
 
 export default {

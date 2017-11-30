@@ -3,7 +3,7 @@
     <md-table-card style="width: 100%;" v-if="restaurantsLoaded">
       <md-toolbar>
         <h1 class="md-title">Restaurants</h1>
-        <md-button>Add</md-button>
+        <md-button id="btn-new-restaurant" @click="onNewRestaurantModalOpen('new-restaurant-modal')">Add</md-button>
       </md-toolbar>
 
       <md-table md-sort="name">
@@ -26,7 +26,7 @@
               {{restaurant.address || '---'}}
             </md-table-cell>
             <md-table-cell>
-              {{restaurant.number || '---'}}
+              {{restaurant.telephoneNumber || '---'}}
             </md-table-cell>
             <md-table-cell>
               {{restaurant.dishes ? restaurant.dishes.length : '---'}}
@@ -39,6 +39,11 @@
 
                 <md-menu-content>
                   <md-menu-item>
+                    <md-icon>add</md-icon>
+                    <span>Add dishes</span>
+                  </md-menu-item>
+
+                  <md-menu-item @selected="onRestaurantEdit('new-restaurant-modal', restaurant)">
                     <md-icon>edit</md-icon>
                     <span>Edit info</span>
                   </md-menu-item>
@@ -60,16 +65,22 @@
         :md-content-html="confirm.contentHtml"
         :md-ok-text="confirm.ok"
         :md-cancel-text="confirm.cancel"
-        @close="onClose"
+        @close="onConfirmClose"
         ref="confirm-restaurant-delete">
     </md-dialog-confirm>
+
+    <restaurant-data-modal
+        :edit-mode="this.editRestaurant"
+        ref="new-restaurant-modal"/>
   </div>
 </template>
 
 <script>
   import {mapGetters} from 'vuex';
+  import RestaurantDataModal from '../../components/restaurants/RestaurantDataModal.vue';
 
   export default {
+    components: {RestaurantDataModal},
     name: 'restaurants-table',
     data () {
       return {
@@ -79,7 +90,8 @@
           contentHtml: 'Are you sure you want to delete this restaurant?',
           ok: 'Yes',
           cancel: 'No'
-        }
+        },
+        editRestaurant: false
       };
     },
     methods: {
@@ -90,11 +102,26 @@
       closeDialog (ref) {
         this.$refs[ref].close();
       },
-      onClose (type) {
-        console.log(type);
+      onConfirmClose (type) {
         if (type === 'ok') {
           this.$store.dispatch('removeRestaurant', this.removedRestaurantId);
         }
+      },
+      onNewRestaurantModalOpen (ref) {
+        this.editRestaurant = false;
+        const newData = {
+          id: 0,
+          name: '',
+          address: '',
+          telephoneNumber: ''
+        };
+        this.$store.commit('setEditedRestaurant', newData);
+        this.$refs[ref].$refs['new-restaurant-dialog'].open();
+      },
+      onRestaurantEdit (ref, editableRestaurantData) {
+        this.editRestaurant = true;
+        this.$store.commit('setEditedRestaurant', JSON.parse(JSON.stringify(editableRestaurantData)));
+        this.$refs[ref].$refs['new-restaurant-dialog'].open();
       }
     },
     created () {

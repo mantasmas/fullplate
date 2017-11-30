@@ -106,13 +106,6 @@
 [disabled] {
   cursor: not-allowed; }
 
-label {
-  display: block;
-  margin-top: 25px;
-  font-weight: 500;
-  font-family: "Hind thin", sans-serif;
-  font-size: 16px; }
-
 textarea {
   color: #666666; }
 

@@ -7,10 +7,10 @@ namespace fullPlate.DataContracts.Responses
 {
     public class RestaurantResponse
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Number { get; set; }
-        public string Address { get; set; }
-        public List<DishResponse> Dishes { get; set; }
+        public int id { get; set; }
+        public string name { get; set; }
+        public string telephoneNumber { get; set; }
+        public string address { get; set; }
+        public List<DishResponse> dishes { get; set; }
     }
 }
