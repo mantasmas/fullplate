@@ -1,4 +1,4 @@
 export default {
-  SOUP: 1,
-  MAIN: 2
+  SOUP: 0,
+  MAIN: 1
 };

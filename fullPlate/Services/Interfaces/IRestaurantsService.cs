@@ -13,7 +13,10 @@ namespace fullPlate.Services.Interfaces
         RestaurantResponse GetOneRestaurant(int restaurantId);
         RestaurantResponse AddNewRestaurant(RestaurantDataRequest restaurantData);
         RestaurantResponse UpdateRestaurant(int id, RestaurantDataRequest restaurantData);
-        DishResponse AddNewDish(int restaurantId, NewDishRequest restaurant);
         bool RemoveRestaurant(int restaurantId);
+        RestaurantDishesResponse GetRestaurantDishes(int restaurantId);
+        DishResponse AddNewDish(int restaurantId, DishDataRequest restaurant);
+        DishResponse UpdateDish(int dishId, DishDataRequest dishData);
+        bool DeleteDish(int dishId);
     }
 }

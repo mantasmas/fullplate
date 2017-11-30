@@ -8,10 +8,10 @@ namespace fullPlate.DataContracts.Responses
 {
     public class DishResponse
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public decimal Price { get; set; }
-        public DishType Type { get; set; }
-        public bool IsVegetarian { get; set; }
+        public int id { get; set; }
+        public string name { get; set; }
+        public decimal price { get; set; }
+        public DishType dishType { get; set; }
+        public bool isVegetarian { get; set; }
     }
 }

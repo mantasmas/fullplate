@@ -25,12 +25,22 @@ namespace fullPlate.Services
         {
             return _dbContext
                 .Restaurants
+                .Include(x => x.Dishes)
                 .Select(x => new RestaurantResponse
                     {
                         id = x.Id,
                         name = x.Name,
                         address = x.Address,
-                        telephoneNumber = x.TelephoneNumber
+                        telephoneNumber = x.TelephoneNumber,
+                        dishes = x.Dishes.Select(y => new DishResponse
+                        {
+                            id = y.Id,
+                            name = y.Name,
+                            dishType = y.DishType,
+                            price = y.Price,
+                            isVegetarian = y.IsVegetarian
+                        })
+                        .ToList()
                     }
                 )
                 .ToList();
@@ -50,11 +60,11 @@ namespace fullPlate.Services
                         telephoneNumber = x.TelephoneNumber,
                         dishes = x.Dishes.Select(y => new DishResponse
                         {
-                            Id = y.Id,
-                            Name = y.Name,
-                            Type = y.DishType,
-                            Price = y.Price,
-                            IsVegetarian = y.IsVegetarian
+                            id = y.Id,
+                            name = y.Name,
+                            dishType = y.DishType,
+                            price = y.Price,
+                            isVegetarian = y.IsVegetarian
                         })
                         .ToList()
                     }
@@ -121,7 +131,28 @@ namespace fullPlate.Services
             return true;
         }
 
-        public DishResponse AddNewDish(int restaurantId, NewDishRequest dishData)
+        public RestaurantDishesResponse GetRestaurantDishes(int restaurantId)
+        {
+            List<DishResponse>  dishes = _dbContext.Dishes
+                .Where(x => x.Restaurant.Id == restaurantId)
+                .OrderBy(x => x.DishType)
+                .Select(x => new DishResponse
+                {
+                    id = x.Id,
+                    name = x.Name,
+                    price = x.Price,
+                    dishType = x.DishType,
+                    isVegetarian = x.IsVegetarian
+                })
+                .ToList();
+
+            Restaurant restaurant = _dbContext.Restaurants
+                .SingleOrDefault(x => x.Id.Equals(restaurantId));
+
+            return new RestaurantDishesResponse { restaurantName = restaurant.Name, dishes = dishes};
+        }
+
+        public DishResponse AddNewDish(int restaurantId, DishDataRequest dishData)
         {
             Dish newDish = new Dish
             {
@@ -144,12 +175,48 @@ namespace fullPlate.Services
 
             return new DishResponse
             {
-                Id = newDish.Id,
-                Name = newDish.Name,
-                Price = newDish.Price,
-                Type = newDish.DishType,
-                IsVegetarian = newDish.IsVegetarian
+                id = newDish.Id,
+                name = newDish.Name,
+                price = newDish.Price,
+                dishType = newDish.DishType,
+                isVegetarian = newDish.IsVegetarian
             };
+        }
+
+        public DishResponse UpdateDish(int dishId, DishDataRequest dishData)
+        {
+            Dish dish = new Dish
+            {
+                Id = dishId,
+                Name = dishData.name,
+                Price = dishData.price,
+                DishType = dishData.dishType,
+                IsVegetarian = dishData.isVegetarian
+            };
+
+            _dbContext.Dishes.Update(dish);
+            _dbContext.SaveChanges();
+
+            return new DishResponse
+            {
+                id = dish.Id,
+                name = dish.Name,
+                price = dish.Price,
+                isVegetarian = dish.IsVegetarian
+            };
+        }
+
+        public bool DeleteDish(int dishId)
+        {
+            Dish dish = new Dish
+            {
+                Id = dishId
+            };
+
+            _dbContext.Dishes.Remove(dish);
+            _dbContext.SaveChanges();
+
+            return true;
         }
     }
 }

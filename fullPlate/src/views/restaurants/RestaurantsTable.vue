@@ -38,7 +38,7 @@
                 </md-button>
 
                 <md-menu-content>
-                  <md-menu-item>
+                  <md-menu-item @selected="onAddDishes(restaurant.id, restaurant.name)">
                     <md-icon>add</md-icon>
                     <span>Add dishes</span>
                   </md-menu-item>
@@ -70,14 +70,15 @@
     </md-dialog-confirm>
 
     <restaurant-data-modal
-        :edit-mode="this.editRestaurant"
+        :edit-mode="editRestaurantModal"
+        :restaurant-data="editedRestaurant"
         ref="new-restaurant-modal"/>
   </div>
 </template>
 
 <script>
   import {mapGetters} from 'vuex';
-  import RestaurantDataModal from '../../components/restaurants/RestaurantDataModal.vue';
+  import RestaurantDataModal from './RestaurantDataModal.vue';
 
   export default {
     components: {RestaurantDataModal},
@@ -91,7 +92,13 @@
           ok: 'Yes',
           cancel: 'No'
         },
-        editRestaurant: false
+        editRestaurantModal: false,
+        editedRestaurant: {
+          id: 0,
+          name: '',
+          address: '',
+          telephoneNumber: ''
+        }
       };
     },
     methods: {
@@ -108,23 +115,24 @@
         }
       },
       onNewRestaurantModalOpen (ref) {
-        this.editRestaurant = false;
-        const newData = {
-          id: 0,
+        this.editRestaurantModal = false;
+        this.editedRestaurant = {
           name: '',
           address: '',
           telephoneNumber: ''
         };
-        this.$store.commit('setEditedRestaurant', newData);
         this.$refs[ref].$refs['new-restaurant-dialog'].open();
       },
-      onRestaurantEdit (ref, editableRestaurantData) {
-        this.editRestaurant = true;
-        this.$store.commit('setEditedRestaurant', JSON.parse(JSON.stringify(editableRestaurantData)));
+      onRestaurantEdit (ref, restaurantData) {
+        this.editRestaurantModal = true;
+        this.editedRestaurant = JSON.parse(JSON.stringify(restaurantData));
         this.$refs[ref].$refs['new-restaurant-dialog'].open();
       },
       onSort (sortObj) {
         this.$store.commit('sortRestaurantsTable', sortObj);
+      },
+      onAddDishes (restaurantId) {
+        this.$router.push({path: `restaurants/${restaurantId}/dishes`});
       }
     },
     created () {

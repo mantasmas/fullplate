@@ -24,8 +24,9 @@
           this.$router.push(this.routes[tabIndex].link);
         }
       },
-      isCurrentPath (pathName) {
-        return this.$route.path === pathName;
+      isCurrentPath (pathRegexp) {
+        const regexp = new RegExp(`^${pathRegexp}.*`, 'i');
+        return regexp.test(this.$route.path);
       }
     },
     mounted () {

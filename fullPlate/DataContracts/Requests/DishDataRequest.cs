@@ -6,7 +6,7 @@ using fullPlate.DataContracts.Enums;
 
 namespace fullPlate.DataContracts.Requests
 {
-    public class NewDishRequest
+    public class DishDataRequest
     {
         public string name { get; set; }
         public decimal price { get; set; }

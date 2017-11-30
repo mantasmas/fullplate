@@ -38,9 +38,9 @@ namespace fullPlate.Controllers
             {
                 foundRestaurant = _restaurantsService.GetOneRestaurant(id);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return BadRequest(new ErrorResponse { ErrorMessage = "Cannot find restaurant" });
+                return BadRequest(new ErrorResponse { errorMessage = "Cannot find restaurant", errorCause = ex.Data.ToString()});
             }
 
             return Ok(foundRestaurant);
@@ -56,11 +56,11 @@ namespace fullPlate.Controllers
             }
             catch (ArgumentException ex)
             {
-                return BadRequest(new ErrorResponse {ErrorMessage = "Restaurant with same name already exists!"});
+                return BadRequest(new ErrorResponse { errorMessage = "Restaurant with same name already exists!", errorCause = ex.Data.ToString() });
             }
             catch (Exception ex)
             {
-                return BadRequest(new ErrorResponse { ErrorMessage = "Problems encountered when saving a restaurant!" });
+                return BadRequest(new ErrorResponse { errorMessage = "Problems encountered when saving a restaurant!", errorCause = ex.Data.ToString() });
             }
 
             return Ok(response);
@@ -76,28 +76,7 @@ namespace fullPlate.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new ErrorResponse { ErrorMessage = "Problems encountered when saving a restaurant!" });
-            }
-
-            return Ok(response);
-        }
-
-        [HttpPost("{restaurantId}/dishes")]
-        public IActionResult SaveNewDish(int restaurantId, [FromBody]NewDishRequest request)
-        {
-            DishResponse response;
-            try
-            {
-                response = _restaurantsService.AddNewDish(restaurantId, request);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new ErrorResponse { ErrorMessage = "Restaurant with same name already exists!" });
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return BadRequest(new ErrorResponse { ErrorMessage = "Problems encountered when saving a restaurant!" });
+                return BadRequest(new ErrorResponse { errorMessage = "Problems encountered when saving a restaurant!", errorCause = ex.Data.ToString() });
             }
 
             return Ok(response);
@@ -110,12 +89,44 @@ namespace fullPlate.Controllers
             {
                 _restaurantsService.RemoveRestaurant(id);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return BadRequest(new ErrorResponse {ErrorMessage = "Cannot remove restaurant"});
+                return BadRequest(new ErrorResponse { errorMessage = "Cannot remove restaurant", errorCause = ex.Data.ToString() });
             }
 
             return Ok(new {Ok = true});
+        }
+
+        [HttpGet("{restaurantId}/dishes")]
+        public IActionResult GetRestaurantDishes(int restaurantId)
+        {
+            RestaurantDishesResponse response = _restaurantsService.GetRestaurantDishes(restaurantId);
+
+            return Ok(response);
+        }
+
+        [HttpPost("{restaurantId}/dishes")]
+        public IActionResult SaveNewDish(int restaurantId, [FromBody]DishDataRequest request)
+        {
+            DishResponse response = _restaurantsService.AddNewDish(restaurantId, request);
+
+            return Ok(response);
+        }
+
+        [HttpPut("{restaurantId}/dishes/{dishId}")]
+        public IActionResult UpdateDish(int dishId, [FromBody]DishDataRequest request)
+        {
+            DishResponse response = _restaurantsService.UpdateDish(dishId, request);
+
+            return Ok(response);
+        }
+
+        [HttpDelete("{restaurantId}/dishes/{dishId}")]
+        public IActionResult DeleteDish(int dishId)
+        {
+            _restaurantsService.DeleteDish(dishId);
+
+            return Ok(new {Ok=true});
         }
     }
 }

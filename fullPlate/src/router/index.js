@@ -7,7 +7,7 @@ import FridayOrders from '@/views/orders/FridayOrders';
 import NotFound from '@/views/NotFound';
 import RestaurantsTable from '@/views/restaurants/RestaurantsTable';
 import Index from '@/views/Index';
-import RestaurantDetails from '@/views/restaurants/RestaurantDetails';
+import DishesTable from '@/views/dishes/DishesTable';
 
 Vue.use(Router);
 
@@ -43,9 +43,9 @@ export default new Router({
           component: RestaurantsTable
         },
         {
-          path: 'restaurants/:id',
+          path: 'restaurants/:id/dishes',
           name: 'Restaurant',
-          component: RestaurantDetails
+          component: DishesTable
         }
       ]
     },

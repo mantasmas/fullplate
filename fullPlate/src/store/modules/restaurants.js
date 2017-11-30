@@ -9,8 +9,7 @@ const state = {
     title: ''
   },
   restaurantsList: [],
-  removableRestaurantId: null,
-  editedRestaurant: {}
+  removableRestaurantId: null
 };
 
 const mutations = {
@@ -22,27 +21,19 @@ const mutations = {
     state.restaurantsList = newRestaurantList;
     state.restaurantsLoaded = true;
   },
-  setEditedRestaurant (state, restaurantData) {
-    state.editedRestaurant = restaurantData;
-  },
   addNewRestaurant (state, newRestaurant) {
     state.restaurantsList = [...state.restaurantsList, newRestaurant];
   },
   updateRestaurant (state, restaurantData) {
     const newList = [...state.restaurantsList];
-    console.log('newList', newList);
     const index = newList.findIndex(restaurant => restaurant.id === restaurantData.id);
     newList[index] = restaurantData;
 
     state.restaurantsList = newList;
-    console.log(state.restaurantsList);
   },
   removeRestaurant (state, removedRestaurantId) {
     state.restaurantsList = _.filter(state.restaurantsList,
       (restaurant) => restaurant.id !== removedRestaurantId);
-  },
-  addNewDish (state, dishData) {
-    state.editedRestaurant.dishes = state.editedRestaurant.dishes.concat(dishData);
   },
   sortRestaurantsTable (state, sortObj) {
     state.restaurantsList = _.orderBy(state.restaurantsList, sortObj.name, sortObj.type);
@@ -63,6 +54,7 @@ const actions = {
 
           return false;
         } else {
+          console.log(response.data);
           commit('updateRestaurantsList', response.data);
 
           return true;
@@ -163,25 +155,6 @@ const actions = {
           return true;
         }
       });
-  },
-  addNewDish ({commit}, {restaurantId, dishData}) {
-    commit('toggleSpinner');
-    return api
-      .post(`/api/restaurants/${restaurantId}/dishes`, dishData)
-      .then((response) => {
-        commit('toggleSpinner');
-
-        if (!response.ok) {
-          console.log('blueh when adding new dish');
-
-          return false;
-        } else {
-          commit('toggleConfirm');
-          commit('addNewDish', response.data);
-
-          return true;
-        }
-      });
   }
 };
 
@@ -189,8 +162,7 @@ const getters = {
   isModalVisible: state => state.showDeleteRestaurantModal,
   restaurantsList: state => JSON.parse(JSON.stringify(state.restaurantsList)),
   restaurantsLoaded: state => state.restaurantsLoaded,
-  restaurantDeleteId: state => state.removableRestaurantId,
-  editedRestaurant: state => JSON.parse(JSON.stringify(state.editedRestaurant))
+  restaurantDeleteId: state => state.removableRestaurantId
 };
 
 export default {

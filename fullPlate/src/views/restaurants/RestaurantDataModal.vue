@@ -1,6 +1,7 @@
 <template>
   <md-dialog md-open-from="#btn-new-restaurant" md-close-to="#btn-new-restaurant" ref="new-restaurant-dialog">
-    <md-dialog-title>Create New Restaurant</md-dialog-title>
+    <md-dialog-title v-if="editMode">Edit Restaurant</md-dialog-title>
+    <md-dialog-title v-else>Create New Restaurant</md-dialog-title>
     <form v-on:submit.prevent="submitData">
       <md-dialog-content>
         <md-input-container>
@@ -18,12 +19,16 @@
               md-clearable="true"
           />
         </md-input-container>
-        <md-input-container>
+        <md-input-container :class="{'md-input-invalid': errors.has('numeric')}">
           <label>Restaurant Telephone number</label>
           <md-input
               v-model="editedRestaurant.telephoneNumber"
               md-clearable="true"
+              v-validate
+              data-vv-name="numeric"
+              data-vv-rules="numeric"
           />
+          <span class="md-error">{{errors.first('numeric')}}</span>
         </md-input-container>
       </md-dialog-content>
 
@@ -38,32 +43,39 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex';
-
   export default {
     name: 'restaurant-data-modal',
-    props: ['editMode', 'restaurant'],
+    props: ['editMode', 'restaurantData'],
     data () {
-      return {};
+      return {
+        editedRestaurant: {
+          id: 0,
+          name: '',
+          address: '',
+          telephoneNumber: ''
+        }
+      };
     },
     methods: {
       closeDialog () {
-        console.log(this.editedRestaurant.name);
-        console.log(!this.editedRestaurant.name);
         this.$refs['new-restaurant-dialog'].close();
       },
       submitData () {
-        this.$refs['new-restaurant-dialog'].close();
+        if (!this.errors.items.length) {
+          this.$refs['new-restaurant-dialog'].close();
 
-        if (!this.editMode) {
-          this.$store.dispatch('addNewRestaurant', this.editedRestaurant);
-        } else {
-          this.$store.dispatch('updateRestaurant', this.editedRestaurant);
+          if (!this.editMode) {
+            this.$store.dispatch('addNewRestaurant', this.editedRestaurant);
+          } else {
+            this.$store.dispatch('updateRestaurant', this.editedRestaurant);
+          }
         }
       }
     },
-    computed: {
-      ...mapGetters(['editedRestaurant'])
+    watch: {
+      restaurantData: function () {
+        this.editedRestaurant = this.restaurantData;
+      }
     }
   };
 </script>
