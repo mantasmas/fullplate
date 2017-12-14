@@ -32,15 +32,15 @@
               {{restaurant.dishes ? restaurant.dishes.length : '---'}}
             </md-table-cell>
             <md-table-cell>
-              <md-menu md-size="3">
+              <md-menu md-size="4">
                 <md-button class="md-icon-button" md-menu-trigger>
                   <md-icon>more_vert</md-icon>
                 </md-button>
 
                 <md-menu-content>
-                  <md-menu-item @selected="onAddDishes(restaurant.id, restaurant.name)">
+                  <md-menu-item @selected="onManageDishes(restaurant.id, restaurant.name)">
                     <md-icon>add</md-icon>
-                    <span>Add dishes</span>
+                    <span>Manage dishes</span>
                   </md-menu-item>
 
                   <md-menu-item @selected="onRestaurantEdit('new-restaurant-modal', restaurant)">
@@ -131,7 +131,7 @@
       onSort (sortObj) {
         this.$store.commit('sortRestaurantsTable', sortObj);
       },
-      onAddDishes (restaurantId) {
+      onManageDishes (restaurantId) {
         this.$router.push({path: `restaurants/${restaurantId}/dishes`});
       }
     },

@@ -31,16 +31,17 @@ export default new Router({
           path: 'friday-orders',
           name: 'Friday orders',
           component: FridayOrders
-          // beforeEnter: (to, from, next) => {
-          //   console.log(to)
-          //   console.log(from)
-          //   next('/restaurants')
-          // }
+
         },
         {
           path: 'restaurants',
           name: 'Restaurants',
           component: RestaurantsTable
+          // beforeEnter: (to, from, next) => {
+          //   console.log(to)
+          //   console.log(from)
+          //   next('/restaurants')
+          // }
         },
         {
           path: 'restaurants/:id/dishes',

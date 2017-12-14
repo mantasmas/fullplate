@@ -54,7 +54,6 @@ const actions = {
 
           return false;
         } else {
-          console.log(response.data);
           commit('updateRestaurantsList', response.data);
 
           return true;
@@ -74,7 +73,6 @@ const actions = {
 
           return false;
         } else {
-          console.log(response.data);
           commit('addNewRestaurant', response.data);
 
           return true;
