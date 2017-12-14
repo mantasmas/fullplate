@@ -1,17 +1,21 @@
 const state = {
-  app: {
-    spinnerVisible: false
-  }
+  spinnerVisible: false,
+  notificationVisible: false,
+  notificationText: ''
 };
 
 const mutations = {
   toggleSpinner (state) {
-    state.app.spinnerVisible = !state.app.spinnerVisible;
+    state.spinnerVisible = !state.spinnerVisible;
+  },
+  toggleNotification (state, notificationText = '') {
+    state.notificationVisible = !state.notificationVisible;
+    state.notificationText = notificationText;
   }
 };
 
 const getters = {
-  spinnerVisible: state => state.app.spinnerVisible
+  spinnerVisible: state => state.spinnerVisible
 };
 
 export default {

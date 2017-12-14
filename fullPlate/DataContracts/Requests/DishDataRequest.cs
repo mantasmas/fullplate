@@ -4,11 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using fullPlate.DataContracts.Enums;
 
-namespace fullPlate.DataContracts.Responses
+namespace fullPlate.DataContracts.Requests
 {
-    public class DishResponse
+    public class DishDataRequest
     {
-        public int id { get; set; }
         public string name { get; set; }
         public decimal price { get; set; }
         public DishType dishType { get; set; }

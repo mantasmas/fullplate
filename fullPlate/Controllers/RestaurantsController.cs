@@ -29,21 +29,54 @@ namespace fullPlate.Controllers
             return Ok(allRestaurants);
         }
 
+        [HttpGet("{id}")]
+        public IActionResult GetOneRestaurant(int id)
+        {
+            RestaurantResponse foundRestaurant;
+
+            try
+            {
+                foundRestaurant = _restaurantsService.GetOneRestaurant(id);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ErrorResponse { errorMessage = "Cannot find restaurant", errorCause = ex.Data.ToString()});
+            }
+
+            return Ok(foundRestaurant);
+        }
+
         [HttpPost]
-        public IActionResult SaveNewRestaurant([FromBody]NewRestaurantRequest request)
+        public IActionResult SaveNewRestaurant([FromBody]RestaurantDataRequest request)
         {
             RestaurantResponse response;
             try
             {
-                response = _restaurantsService.AddNewRestaurant(request.Title);
+                response = _restaurantsService.AddNewRestaurant(request);
             }
             catch (ArgumentException ex)
             {
-                return BadRequest(new ErrorResponse {ErrorMessage = "Restaurant with same name already exists!"});
+                return BadRequest(new ErrorResponse { errorMessage = "Restaurant with same name already exists!", errorCause = ex.Data.ToString() });
             }
             catch (Exception ex)
             {
-                return BadRequest(new ErrorResponse { ErrorMessage = "Problems encountered when saving a restaurant!" });
+                return BadRequest(new ErrorResponse { errorMessage = "Problems encountered when saving a restaurant!", errorCause = ex.Data.ToString() });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateRestaurant(int id, [FromBody]RestaurantDataRequest request)
+        {
+            RestaurantResponse response;
+            try
+            {
+                response = _restaurantsService.UpdateRestaurant(id, request);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ErrorResponse { errorMessage = "Problems encountered when saving a restaurant!", errorCause = ex.Data.ToString() });
             }
 
             return Ok(response);
@@ -56,12 +89,44 @@ namespace fullPlate.Controllers
             {
                 _restaurantsService.RemoveRestaurant(id);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return BadRequest(new ErrorResponse {ErrorMessage = "Cannot remove restaurant"});
+                return BadRequest(new ErrorResponse { errorMessage = "Cannot remove restaurant", errorCause = ex.Data.ToString() });
             }
 
             return Ok(new {Ok = true});
+        }
+
+        [HttpGet("{restaurantId}/dishes")]
+        public IActionResult GetRestaurantDishes(int restaurantId)
+        {
+            RestaurantDishesResponse response = _restaurantsService.GetRestaurantDishes(restaurantId);
+
+            return Ok(response);
+        }
+
+        [HttpPost("{restaurantId}/dishes")]
+        public IActionResult SaveNewDish(int restaurantId, [FromBody]DishDataRequest request)
+        {
+            DishResponse response = _restaurantsService.AddNewDish(restaurantId, request);
+
+            return Ok(response);
+        }
+
+        [HttpPut("{restaurantId}/dishes/{dishId}")]
+        public IActionResult UpdateDish(int dishId, [FromBody]DishDataRequest request)
+        {
+            DishResponse response = _restaurantsService.UpdateDish(dishId, request);
+
+            return Ok(response);
+        }
+
+        [HttpDelete("{restaurantId}/dishes/{dishId}")]
+        public IActionResult DeleteDish(int dishId)
+        {
+            _restaurantsService.DeleteDish(dishId);
+
+            return Ok(new {Ok=true});
         }
     }
 }

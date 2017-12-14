@@ -10,6 +10,17 @@ namespace fullPlate.Data
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Restaurant>()
+                .HasMany(x => x.Dishes)
+                .WithOne(y => y.Restaurant)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
+
         public DbSet<Restaurant> Restaurants { get; set; }
+        public DbSet<Dish> Dishes { get; set; }
     }
 }

@@ -5,9 +5,9 @@ import Login from '@/views/Login';
 import Page from '@/views/Page';
 import FridayOrders from '@/views/orders/FridayOrders';
 import NotFound from '@/views/NotFound';
-import Restaurants from '@/views/restaurants/Restaurants.vue';
+import RestaurantsTable from '@/views/restaurants/RestaurantsTable';
 import Index from '@/views/Index';
-import RestaurantDetails from '@/views/restaurants/RestaurantDetails';
+import DishesTable from '@/views/dishes/DishesTable';
 
 Vue.use(Router);
 
@@ -31,6 +31,12 @@ export default new Router({
           path: 'friday-orders',
           name: 'Friday orders',
           component: FridayOrders
+
+        },
+        {
+          path: 'restaurants',
+          name: 'Restaurants',
+          component: RestaurantsTable
           // beforeEnter: (to, from, next) => {
           //   console.log(to)
           //   console.log(from)
@@ -38,14 +44,9 @@ export default new Router({
           // }
         },
         {
-          path: 'restaurants',
-          name: 'Restaurants',
-          component: Restaurants
-        },
-        {
-          path: 'restaurantes',
-          name: 'Restaurants',
-          component: RestaurantDetails
+          path: 'restaurants/:id/dishes',
+          name: 'Restaurant',
+          component: DishesTable
         }
       ]
     },

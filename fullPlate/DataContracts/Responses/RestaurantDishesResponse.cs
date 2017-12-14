@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace fullPlate.DataContracts.Responses
 {
-    public class ErrorResponse
+    public class RestaurantDishesResponse
     {
-        public string errorMessage { get; set; }
-        public string errorCause { get; set; }
+        public string restaurantName { get; set; }
+        public List<DishResponse> dishes { get; set; }
     }
 }

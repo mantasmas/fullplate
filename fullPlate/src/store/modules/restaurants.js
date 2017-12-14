@@ -3,32 +3,40 @@ import _ from 'lodash';
 import api from '../../utils/apiHelper';
 
 const state = {
-  restaurants: {
-    loaded: false,
-    showDeleteModal: false,
-    newRestaurant: {
-      title: ''
-    },
-    restaurantsList: [],
-    removableRestaurantId: null
-  }
+  restaurantsLoaded: false,
+  showDeleteRestaurantModal: false,
+  newRestaurant: {
+    title: ''
+  },
+  restaurantsList: [],
+  removableRestaurantId: null
 };
 
 const mutations = {
   toggleConfirm (state, restaurantId) {
-    state.restaurants.showDeleteModal = !state.restaurants.showDeleteModal;
-    state.restaurants.removableRestaurantId = restaurantId;
+    state.showDeleteRestaurantModal = !state.showDeleteRestaurantModal;
+    state.removableRestaurantId = restaurantId;
   },
   updateRestaurantsList (state, newRestaurantList) {
-    state.restaurants.restaurantsList = newRestaurantList;
-    state.restaurants.loaded = true;
+    state.restaurantsList = newRestaurantList;
+    state.restaurantsLoaded = true;
   },
   addNewRestaurant (state, newRestaurant) {
-    state.restaurants.restaurantsList = [...state.restaurants.restaurantsList, newRestaurant];
+    state.restaurantsList = [...state.restaurantsList, newRestaurant];
+  },
+  updateRestaurant (state, restaurantData) {
+    const newList = [...state.restaurantsList];
+    const index = newList.findIndex(restaurant => restaurant.id === restaurantData.id);
+    newList[index] = restaurantData;
+
+    state.restaurantsList = newList;
   },
   removeRestaurant (state, removedRestaurantId) {
-    state.restaurants.restaurantsList = _.filter(state.restaurants.restaurantsList,
+    state.restaurantsList = _.filter(state.restaurantsList,
       (restaurant) => restaurant.id !== removedRestaurantId);
+  },
+  sortRestaurantsTable (state, sortObj) {
+    state.restaurantsList = _.orderBy(state.restaurantsList, sortObj.name, sortObj.type);
   }
 };
 
@@ -52,10 +60,11 @@ const actions = {
         }
       });
   },
-  addNewRestaurant ({commit}, restaurantName) {
+  addNewRestaurant ({commit}, restaurantData) {
+    console.log(restaurantData);
     commit('toggleSpinner');
     return api
-      .post('/api/restaurants', {Title: restaurantName})
+      .post('/api/restaurants', restaurantData)
       .then((response) => {
         commit('toggleSpinner');
 
@@ -65,6 +74,24 @@ const actions = {
           return false;
         } else {
           commit('addNewRestaurant', response.data);
+
+          return true;
+        }
+      });
+  },
+  updateRestaurant ({commit}, restaurantData) {
+    commit('toggleSpinner');
+    return api
+      .put(`/api/restaurants/${restaurantData.id}`, restaurantData)
+      .then((response) => {
+        commit('toggleSpinner');
+
+        if (!response.ok) {
+          console.log('blueh when updating');
+
+          return false;
+        } else {
+          commit('updateRestaurant', response.data);
 
           return true;
         }
@@ -88,14 +115,52 @@ const actions = {
           return true;
         }
       });
+  },
+  getOneRestaurant ({commit}, restaurantId) {
+    commit('toggleSpinner');
+    return api
+      .get(`/api/restaurants/${restaurantId}`)
+      .then((response) => {
+        commit('toggleSpinner');
+
+        if (!response.ok) {
+          console.log('blueh when getting');
+
+          return false;
+        } else {
+          commit('toggleConfirm');
+          commit('getOneRestaurant', response.data);
+
+          return true;
+        }
+      });
+  },
+  saveRestaurantChanges ({commit}, restaurantId) {
+    commit('toggleSpinner');
+    return api
+      .get(`/api/restaurants/${restaurantId}`)
+      .then((response) => {
+        commit('toggleSpinner');
+
+        if (!response.ok) {
+          console.log('blueh when getting');
+
+          return false;
+        } else {
+          commit('toggleConfirm');
+          commit('getOneRestaurant', response.data);
+
+          return true;
+        }
+      });
   }
 };
 
 const getters = {
-  isModalVisible: state => state.restaurants.showDeleteModal,
-  restaurantsList: state => state.restaurants.restaurantsList,
-  restaurantsLoaded: state => state.restaurants.loaded,
-  restaurantDeleteId: state => state.restaurants.removableRestaurantId
+  isModalVisible: state => state.showDeleteRestaurantModal,
+  restaurantsList: state => JSON.parse(JSON.stringify(state.restaurantsList)),
+  restaurantsLoaded: state => state.restaurantsLoaded,
+  restaurantDeleteId: state => state.removableRestaurantId
 };
 
 export default {
