@@ -12,9 +12,10 @@ using System;
 namespace fullPlate.Migrations
 {
     [DbContext(typeof(FullPlateContext))]
-    partial class FullPlateContextModelSnapshot : ModelSnapshot
+    [Migration("20180107160220_add_lunches_orders")]
+    partial class add_lunches_orders
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

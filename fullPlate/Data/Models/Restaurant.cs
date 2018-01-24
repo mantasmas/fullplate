@@ -20,6 +20,8 @@ namespace fullPlate.Data.Models
         [MaxLength(50)]
         public string Address { get; set; }
 
+        public bool Deleted { get; set; }
+
         public List<Dish> Dishes { get; set; }
     }
 }

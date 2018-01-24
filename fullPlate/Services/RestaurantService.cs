@@ -26,6 +26,7 @@ namespace fullPlate.Services
             return _dbContext
                 .Restaurants
                 .Include(x => x.Dishes)
+                .Where(x => x.Deleted == false)
                 .Select(x => new RestaurantResponse
                     {
                         id = x.Id,
@@ -50,7 +51,7 @@ namespace fullPlate.Services
         {
             return _dbContext
                 .Restaurants
-                .Where(x => x.Id.Equals(restaurantId))
+                .Where(x => x.Id.Equals(restaurantId) && x.Deleted == false)
                 .OrderBy(x => x.Name)
                 .Select(x => new RestaurantResponse
                     {
@@ -123,9 +124,13 @@ namespace fullPlate.Services
 
         public bool RemoveRestaurant(int restaurantId)
         {
-            Restaurant restaurant = new Restaurant {Id = restaurantId};
+            Restaurant restaurant = new Restaurant
+            {
+                Id = restaurantId,
+                Deleted = true
+            };
 
-            _dbContext.Restaurants.Remove(restaurant);
+            _dbContext.Restaurants.Update(restaurant);
             _dbContext.SaveChanges();
 
             return true;
@@ -134,7 +139,7 @@ namespace fullPlate.Services
         public RestaurantDishesResponse GetRestaurantDishes(int restaurantId)
         {
             List<DishResponse>  dishes = _dbContext.Dishes
-                .Where(x => x.Restaurant.Id == restaurantId)
+                .Where(x => x.Restaurant.Id == restaurantId && x.Deleted == false)
                 .OrderBy(x => x.DishType)
                 .Select(x => new DishResponse
                 {
@@ -165,9 +170,6 @@ namespace fullPlate.Services
             Restaurant restaurant = _dbContext.Restaurants
                 .Include(x => x.Dishes)
                 .Single(x => x.Id.Equals(restaurantId));
-
-            Console.WriteLine(restaurant.Id);
-            Console.WriteLine(restaurant.Name);
 
             restaurant.Dishes.Add(newDish);
 
@@ -210,10 +212,11 @@ namespace fullPlate.Services
         {
             Dish dish = new Dish
             {
-                Id = dishId
+                Id = dishId,
+                Deleted = true
             };
 
-            _dbContext.Dishes.Remove(dish);
+            _dbContext.Dishes.Update(dish);
             _dbContext.SaveChanges();
 
             return true;

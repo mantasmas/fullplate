@@ -2,7 +2,7 @@
   <header class="page-header">
     <div class="page-frame">
       <p class="user-greeting">
-        <span>Hello</span> <span class="user-name">{{name}}</span><span>, <router-link to="/login">logout</router-link></span>
+        <span>Hello</span> <span class="user-name">{{fullName}}</span><span>, <a @click="handleLogout()">logout</a></span>
       </p>
 
       <router-link to="/" class="logo"><img src="../assets/fullplage-logo-white.svg" alt="logo"></router-link>
@@ -11,12 +11,22 @@
 </template>
 
 <script>
+  import {mapGetters} from 'vuex';
+
   export default {
     name: 'page',
     data () {
-      return {
-        name: 'John'
-      };
+      return {};
+    },
+    methods: {
+      handleLogout () {
+        this.$store.dispatch('logout').then(() => {
+          this.$router.push('/login');
+        });
+      }
+    },
+    computed: {
+      ...mapGetters(['fullName'])
     }
   };
 </script>

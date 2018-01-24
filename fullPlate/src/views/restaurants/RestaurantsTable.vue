@@ -58,6 +58,10 @@
           </md-table-row>
         </md-table-body>
       </md-table>
+
+      <div v-if="!restaurantsList.length" class="flexible-container">
+        <h2>No restaurants are registered... yet!</h2>
+      </div>
     </md-table-card>
 
     <md-dialog-confirm

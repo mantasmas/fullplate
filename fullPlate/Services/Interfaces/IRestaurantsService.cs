@@ -9,7 +9,7 @@ namespace fullPlate.Services.Interfaces
 {
     public interface IRestaurantsService
     {
-        List<RestaurantResponse>GetAll();
+        List<RestaurantResponse> GetAll();
         RestaurantResponse GetOneRestaurant(int restaurantId);
         RestaurantResponse AddNewRestaurant(RestaurantDataRequest restaurantData);
         RestaurantResponse UpdateRestaurant(int id, RestaurantDataRequest restaurantData);
