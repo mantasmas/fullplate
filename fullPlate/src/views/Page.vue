@@ -22,6 +22,9 @@
     data () {
       return {};
     },
+    created () {
+//      const a =  document.cookie.match(/^(.*;)?\s*MyCookie\s*=\s*[^;]+(.*)?$/);
+    },
     components: {
       'page-header': PageHeader,
       'navigation': Navigation

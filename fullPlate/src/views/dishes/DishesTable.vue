@@ -52,6 +52,10 @@
         </md-table-body>
 
       </md-table>
+
+      <div v-if="!dishesList.length" class="flexible-container">
+        <h2>No dishes are registered... for now!</h2>
+      </div>
     </md-table-card>
 
     <dish-data-modal

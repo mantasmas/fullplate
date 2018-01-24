@@ -16,5 +16,9 @@ namespace fullPlate.Data.Models
         [Required]
         [MaxLength(50)]
         public string LastName { get; set; }
+
+        public bool Disabled { get; set; }
+
+        public List<Order> Orders { get; set; }
   }
 }

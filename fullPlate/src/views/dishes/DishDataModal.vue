@@ -55,7 +55,6 @@
     methods: {
       closeDialog () {
         this.$refs['new-dish-dialog'].close();
-        console.log(this.errors.has('email'));
       },
       submitData () {
         this.$refs['new-dish-dialog'].close();
