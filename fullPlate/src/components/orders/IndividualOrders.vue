@@ -19,7 +19,7 @@
 </template>
 
 <script>
-  import _ from 'lodash'
+  import _ from 'lodash';
 
   export default{
     name: 'IndividualOrders',
@@ -27,14 +27,14 @@
     data () {
       return {
         individualOrders: this.orders
-      }
+      };
     },
     methods: {
       sortColumn (sortProperty) {
-        const sortOrder = this.sortDescending ? 'desc' : 'asc'
-        this.individualOrders = _.orderBy(this.individualOrders, sortProperty, sortOrder)
-        this.sortDescending = !this.sortDescending
+        const sortOrder = this.sortDescending ? 'desc' : 'asc';
+        this.individualOrders = _.orderBy(this.individualOrders, sortProperty, sortOrder);
+        this.sortDescending = !this.sortDescending;
       }
     }
-  }
+  };
 </script>
